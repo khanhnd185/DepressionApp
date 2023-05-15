@@ -78,16 +78,16 @@ def voicebot(txt):
 
             if index == len(conversation[:5]):
                 break
-        except sr.UnknownValueError:
+        except sr.WaitTimeoutError:
             txt.insert(END, "Oops! Didn't catch that\n")
             pass
-        except sr.WaitTimeoutError:
+        except sr.UnknownValueError:
             txt.insert(END, "Oops! Didn't catch that\n")
             pass
 
     infiles = os.listdir()
-    infiles = [file for file in infiles if file.endswith(".wav") ]
     outfile = "sounds.wav"
+    infiles = [file for file in infiles if file.endswith(".wav") and file != outfile]
 
     data= []
     for infile in infiles:

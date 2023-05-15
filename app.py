@@ -23,18 +23,18 @@ class GUI:
         # chat window which is currently hidden
         self.Window = Tk()
         self.Window.withdraw()
+        self.Window.bind('<Escape>', lambda e: self.Window.quit())
         self.init_homepage()
 
         #Start main loop
         self.Window.mainloop()
 
     def init_homepage(self):
-        # login window
-        self.login = Toplevel()
-        self.login.title("Depression Recognition Application")
-        self.login.resizable(width=False, height=False)
-        self.login.configure(width=450, height=450, bg=BG_COLOR)
-        self.title = Label(self.login
+        self.home = Toplevel()
+        self.home.title("Depression Recognition Application")
+        self.home.resizable(width=False, height=False)
+        self.home.configure(width=450, height=450, bg=BG_COLOR)
+        self.title = Label(self.home
                          , bg=BG_COLOR
                          , fg=TEXT_COLOR
                          , font=FONT_TITLE 
@@ -42,7 +42,7 @@ class GUI:
                          , justify=CENTER)
         self.title.place(anchor='center', relx=0.5, rely=0.1)
 
-        self.frame = Frame(self.login, width=300, height=300)
+        self.frame = Frame(self.home, width=300, height=300)
         self.frame.pack()
         self.frame.place(anchor='center', relx=0.5, rely=0.5)
         self.img = ImageTk.PhotoImage(Image.open("logo.png"))
@@ -51,19 +51,19 @@ class GUI:
         self.logo.pack()
 
         # create buttons
-        self.but1 = Button(self.login
+        self.but1 = Button(self.home
                         ,text="YOUTUBE"
                         ,font=FONT_BOLD
                         ,command=lambda: self.from_home_to_youtube())
         self.but1.place(anchor='center', relx=0.25, rely=0.93)
 
-        self.but2 = Button(self.login
+        self.but2 = Button(self.home
                         , text="INTERVIEW"
                         , font=FONT_BOLD
                         , command=lambda: self.from_home_to_interview())
         self.but2.place(anchor='center', relx=0.72, rely=0.93)
 
-        self.but2 = Button(self.login
+        self.but2 = Button(self.home
                         , text="CAMERA"
                         , font=FONT_BOLD
                         , command=lambda: self.from_home_to_camera())
@@ -75,7 +75,7 @@ class GUI:
         self.frame.destroy()
         self.logo.destroy()
         self.title.destroy()
-        self.login.destroy()
+        self.home.destroy()
 
     def from_home_to_interview(self):
         self.deinit_homepage()

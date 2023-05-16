@@ -1,13 +1,15 @@
+import os
 import cv2
 import threading
 import webbrowser
 import dlib
+import moviepy.editor as mp
 
 from imutils import face_utils
 from pytube import YouTube
 from tkinter import *
 from tkinter import messagebox
-from voicebot import voicebot
+from voicebot import voicebot, detector
 from PIL import ImageTk, Image
 
 BG_TEXT = "#2C3E50"
@@ -72,7 +74,7 @@ class GUI:
         self.but2.place(anchor='center', relx=0.50, rely=0.93)
 
     def about(self):
-        messagebox.showinfo("Information","Develop by Dang-Khanh Nguyen. Email: khanhnd185@gmail.com")
+        messagebox.showinfo("Information","Developed by Dang-Khanh Nguyen. Email: khanhnd185@gmail.com")
 
     def deinit_homepage(self):
         self.but2.destroy()
@@ -153,7 +155,13 @@ class GUI:
         yt = YouTube(link, use_oauth=True, allow_oauth_cache=True)
         self.string_var.set("Processing...")
         yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first().download(filename='a.mp4')
-        self.string_var.set(yt.title)
+        clip = mp.VideoFileClip("a.mp4")
+        clip.audio.write_audiofile("a.wav")
+        is_depress = detector.inference("a.wav")
+        is_depress = "depressed" if is_depress else "normal"
+        os.remove("a.wav")
+        text = "{} - The subject is diagnosed to be {}".format(yt.title, is_depress)
+        self.string_var.set(text)
         self.e.delete(0, END)
 
     ## Test feature interview

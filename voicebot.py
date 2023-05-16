@@ -4,6 +4,8 @@ import speech_recognition as sr
 from tkinter import *
 import nltk
 
+from detector import Detector
+
 # for downloading package files can be commented after First run
 nltk.download('popular', quiet=True)
 nltk.download('nps_chat',quiet=True)
@@ -52,6 +54,8 @@ conversation = ["hi i am ellie thanks for coming in today. i will ask a few ques
 "have you been diagnosed with depression?",
 "when was the last time you felt really happy?",
 "okay i think i have asked everything i need to. Goodbye."]
+
+detector = Detector()
 
 def voicebot(txt):
     #Recording voice input using microphone 
@@ -103,3 +107,7 @@ def voicebot(txt):
 
     for infile in infiles:
         os.remove(infile)
+
+    is_depress = detector.inference(outfile)
+    is_depress = "depressed" if is_depress else "normal"
+    txt.insert(END, "Ellie: You are diagnosed to be {}\n".format(is_depress))

@@ -12,6 +12,7 @@ from sklearn.metrics import recall_score, precision_score, accuracy_score, confu
 class Detector:
     # constructor method
     def __init__(self):
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.depmbt = SCUnimodalTransformer(25 , 256)
         self.header = nn.Sequential(
             nn.Linear(256, 512),
@@ -23,8 +24,8 @@ class Detector:
         self.depmbt = load_state_dict(self.depmbt, 'model/net.pth')
         self.header = load_state_dict(self.header, 'model/classifier.pth')
 
-        self.depmbt = self.depmbt.cuda()
-        self.header = self.header.cuda()
+        self.depmbt = self.depmbt.to(self.device)
+        self.header = self.header.to(self.device)
 
         self.smile = opensmile.Smile(feature_set=opensmile.FeatureSet.eGeMAPSv02
                                    , feature_level=opensmile.FeatureLevel.LowLevelDescriptors)
@@ -38,10 +39,10 @@ class Detector:
         for batch_idx, data in enumerate(loader):
             feature_audio, feature_video, mask, labels = data
             with torch.no_grad():
-                feature_audio = feature_audio.cuda()
-                feature_video = feature_video.cuda()
-                mask = mask.cuda()
-                labels = labels.cuda()
+                feature_audio = feature_audio.to(self.device)
+                feature_video = feature_video.to(self.device)
+                mask = mask.to(self.device)
+                labels = labels.to(self.device)
 
                 features = self.depmbt.encode(feature_audio, feature_video, mask)
                 y = self.header(features.detach())
@@ -81,8 +82,8 @@ class Detector:
             
             self.depmbt.eval()
             self.header.eval()
-            x = x.cuda()
-            m = m.cuda()
+            x = x.to(self.device)
+            m = m.to(self.device)
             features = self.depmbt.encode(x, x, m)
             y = self.header(features.detach())
 

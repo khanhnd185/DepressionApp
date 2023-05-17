@@ -24,6 +24,17 @@ FONT_TITLE = "Helvetica 14 bold"
 class GUI:
     # constructor method
     def __init__(self):
+        
+        self.vid = cv2.VideoCapture(0)
+        self.detector = dlib.get_frontal_face_detector()
+        self.predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
+        # Declare the width and height in variables
+        width, height = 400, 300
+        
+        # Set the width and height
+        self.vid.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+        self.vid.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+
         # chat window which is currently hidden
         self.Window = Tk()
         self.Window.withdraw()
@@ -192,17 +203,6 @@ class GUI:
         self.label_widget.after(10, self.open_camera)
 
     def init_interview_page(self):
-        
-        self.vid = cv2.VideoCapture(0)
-        self.detector = dlib.get_frontal_face_detector()
-        self.predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
-        # Declare the width and height in variables
-        width, height = 400, 300
-        
-        # Set the width and height
-        self.vid.set(cv2.CAP_PROP_FRAME_WIDTH, width)
-        self.vid.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
-
         # to show chat window
         self.interview = Toplevel()
         self.interview.title("Depression Camera")
